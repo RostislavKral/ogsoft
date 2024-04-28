@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Collection;
 class WorkDayFacade
 {
+    const SUNDAY = 0;
+    const SATURDAY = 6;
     private static Carbon $date;
     private static Collection $holidays;
     public function __construct($holidays){
@@ -28,7 +30,7 @@ class WorkDayFacade
     private static function isWeekend()
     {
 
-        if (self::$date->dayOfWeek() == 6 || self::$date->dayOfWeek() == 0)
+        if (self::$date->dayOfWeek() == self::SATURDAY || self::$date->dayOfWeek() == self::SUNDAY)
             return true; // 6 = Saturday, 0 = Sunday
 
         return false;
