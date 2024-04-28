@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Holiday;
+use App\WorkDayFacade;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\WorkDay;
@@ -21,10 +22,11 @@ class WorkDayController extends Controller
             return response('A valid Date is required', 422);
 
         }
+        $holidays = Holiday::where('country', 'cz')->get();
 
-        $workDay = new WorkDay($date);
+        $workDay = new WorkDayFacade($holidays);
 
-        if ($workDay->isWorkday())
+        if ($workDay::isWorkday($date))
             return response()->json(true);
 
         return response()->json(false);

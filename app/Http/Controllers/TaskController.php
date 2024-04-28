@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Holiday;
 use Illuminate\Http\Request;
 use App\Task;
 use Illuminate\Support\Facades\Validator;
+use App\WorkDayFacade;
 
 class TaskController extends Controller
 {
@@ -32,7 +34,11 @@ class TaskController extends Controller
         $startShift = new \DateTime($start->format('Y-m-d') . ' ' . $validated['startShift']);
         $endShift = new \DateTime($start->format('Y-m-d') . ' ' . $validated['endShift']);
 
-        $task = new Task($start, $duration, $ignoreWorkDays, $startShift, $endShift);
+        $holidays = Holiday::where('country', 'cz')->get();
+        $workDayFacade = new WorkDayFacade($holidays);
+
+        $task = new Task($start, $duration, $ignoreWorkDays, $startShift, $endShift, $workDayFacade);
+
         $end = $task->approximate();
 
         return response()->json($end->format('Y-m-d H:i:s'));

@@ -2,54 +2,52 @@
 
 namespace App;
 
-use App\Models\Holiday;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
-
-class WorkDay
+use Illuminate\Support\Collection;
+class WorkDayFacade
 {
-    private Carbon $date;
-    private Collection $holidays;
-    public function __construct($date)
-    {
-        $this->date = Carbon::create($date);
-        $this->holidays = Holiday::where('country', 'cz')->get();
+    private static Carbon $date;
+    private static Collection $holidays;
+    public function __construct($holidays){
+        self::$holidays = $holidays;
     }
-
-    public function isWorkDay(): bool
+    public static function isWorkDay($date): bool
     {
-        if ($this->isWeekend())
+        self::$date = Carbon::create($date);
+
+        if (self::isWeekend())
             return false;
-        else if ($this->isEaster())
+        else if (self::isEaster())
             return false;
-        else if ($this->isHoliday())
+        else if (self::isHoliday())
             return false;
 
         return true;
     }
 
-    private function isWeekend()
+    private static function isWeekend()
     {
 
-        if ($this->date->dayOfWeek() == 6 || $this->date->dayOfWeek() == 0)
+        if (self::$date->dayOfWeek() == 6 || self::$date->dayOfWeek() == 0)
             return true; // 6 = Saturday, 0 = Sunday
 
         return false;
     }
 
-    private function isHoliday(): bool
+    private static function isHoliday(): bool
     {
-        foreach ($this->holidays as $holiday) {
-            if (Carbon::create($holiday->date)->format('m-d') == $this->date->format('m-d'))
+        foreach (self::$holidays as $holiday) {
+            //dump($holiday['date']);
+            if (Carbon::create($holiday['date'])->format('m-d') == self::$date->format('m-d'))
                 return true; //Compare day and month without a year
         }
 
         return false;
     }
-    private function isEaster()
+    private static function isEaster()
     {
         //based on: https://cs.wikipedia.org/wiki/V%C3%BDpo%C4%8Det_data_Velikonoc
-        $year = $this->date->format('Y');
+        $year = self::$date->format('Y');
 
         //for 2000-2099 years constants m = 24 and n = 5
         $m = 24;
@@ -69,7 +67,7 @@ class WorkDay
         $friday = Carbon::create($baseDate)->addDays($friday);
         $monday = Carbon::create($baseDate)->addDays($monday);
 
-        if ($friday == $this->date || $monday == $this->date)
+        if ($friday == self::$date || $monday == self::$date)
             return true;
 
         return false;

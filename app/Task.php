@@ -2,7 +2,8 @@
 
 namespace App;
 
-
+use Illuminate\Support\Collection;
+use App\WorkDayFacade;
 
 class Task
 {
@@ -11,18 +12,23 @@ class Task
 
     private bool $ignoreWorkDays;
 
-    public function __construct($start, $duration, $ignoreWorkDays, $startShift, $endShift)
+    private Collection $holidays;
+    private WorkDayFacade $workDayFacade;
+
+    public function __construct($start, $duration, $ignoreWorkDays, $startShift, $endShift, $workDayFacade)
     {
         $this->start = $start;
         $this->duration = $duration * 60; // to seconds
         $this->ignoreWorkDays = $ignoreWorkDays;
         $this->startShift = $startShift;
         $this->endShift = $endShift;
+        $this->workDayFacade = $workDayFacade;
     }
 
 
     public function approximate(): \DateTime
     {
+        //dd($this->holidays);
         $offset = 0;
         $firstDay = true;
 
@@ -39,8 +45,7 @@ class Task
 
         while ($this->duration > 0) {
             if ($this->ignoreWorkDays) {
-                $workday = new WorkDay($this->startShift);
-                if (!$workday->isWorkDay()) {
+                if (!$this->workDayFacade::isWorkDay($this->startShift)) {
                     $firstDay = false;
                     $this->startShift->modify('+1day');
                     $result = clone $this->startShift;
