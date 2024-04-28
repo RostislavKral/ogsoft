@@ -85,7 +85,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"start\": \"2024-05-01 09:00:00\",\n    \"duration\": 1100,\n    \"ignoreWorkDays\": false,\n    \"startShift\": \"08:00:00\",\n    \"endShift\": \"16:00:00\"\n}",
+					"raw": "{\n    \"start\": \"2024-05-01 07:00:00\",\n    \"duration\": 1100,\n    \"ignoreWorkDays\": true,\n    \"startShift\": \"08:00:00\",\n    \"endShift\": \"16:00:00\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -139,7 +139,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"start\": \"2024-05-01 09:00:00\",\n    \"duration\": 0,\n    \"ignoreWorkDays\": false,\n    \"startShift\": \"08:00:00\",\n    \"endShift\": \"16:00:00\"\n}",
+					"raw": "{\n    \"start\": \"2024-05-01 09:00:00\",\n    \"duration\": -1,\n    \"ignoreWorkDays\": false,\n    \"startShift\": \"08:00:00\",\n    \"endShift\": \"16:00:00\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
