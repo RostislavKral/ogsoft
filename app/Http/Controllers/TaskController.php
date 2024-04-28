@@ -34,6 +34,9 @@ class TaskController extends Controller
         $startShift = new \DateTime($start->format('Y-m-d') . ' ' . $validated['startShift']);
         $endShift = new \DateTime($start->format('Y-m-d') . ' ' . $validated['endShift']);
 
+        if($startShift >= $endShift)
+            return response()->json("Start of a shift has to be before the End of shift");
+
         $holidays = Holiday::where('country', 'cz')->get();
         $workDayFacade = new WorkDayFacade($holidays);
 
