@@ -1,14 +1,19 @@
 <?php
 
 namespace App;
-use Carbon\Carbon;
 
-class WorkDay {
-    private $date;
-    private $holidays;
-    public function __construct($date, $holidays) {
-    $this->date = Carbon::create($date);
-    $this->holidays = $holidays;
+use App\Models\Holiday;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
+
+class WorkDay
+{
+    private Carbon $date;
+    private Collection $holidays;
+    public function __construct($date)
+    {
+        $this->date = Carbon::create($date);
+        $this->holidays = Holiday::where('country', 'cz')->get();
     }
 
     public function isWorkDay(): bool
@@ -26,16 +31,17 @@ class WorkDay {
     private function isWeekend()
     {
 
-       if($this->date->dayOfWeek() == 6 || $this->date->dayOfWeek() == 0) return true; // 6 = Saturday, 0 = Sunday
+        if ($this->date->dayOfWeek() == 6 || $this->date->dayOfWeek() == 0)
+            return true; // 6 = Saturday, 0 = Sunday
 
-       return false;
+        return false;
     }
 
     private function isHoliday(): bool
     {
-        foreach($this->holidays as $holiday)
-        {
-            if(Carbon::create($holiday->date)->format('m-d') == $this->date->format('m-d')) return true; //Compare day and month without a year
+        foreach ($this->holidays as $holiday) {
+            if (Carbon::create($holiday->date)->format('m-d') == $this->date->format('m-d'))
+                return true; //Compare day and month without a year
         }
 
         return false;
@@ -52,18 +58,19 @@ class WorkDay {
         $a = $year % 19;
         $b = $year % 4;
         $c = $year % 7;
-        $d = (19*$a + $m) % 30;
-        $e = ($n + 2*$b + 4*$c + 6*$d) % 7;
+        $d = (19 * $a + $m) % 30;
+        $e = ($n + 2 * $b + 4 * $c + 6 * $d) % 7;
 
         $numberOfDaysToAdd = $d + $e;
         $friday = $numberOfDaysToAdd - 2;
         $monday = $numberOfDaysToAdd + 1;
 
-        $baseDate = Carbon::create($year.'-03-22');
+        $baseDate = Carbon::create($year . '-03-22');
         $friday = Carbon::create($baseDate)->addDays($friday);
         $monday = Carbon::create($baseDate)->addDays($monday);
 
-        if($friday == $this->date || $monday == $this->date) return true;
+        if ($friday == $this->date || $monday == $this->date)
+            return true;
 
         return false;
     }

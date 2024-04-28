@@ -21,9 +21,8 @@ class WorkDayController extends Controller
             return response('A valid Date is required', 400);
 
         }
-        $holidays = Holiday::where('country', 'cz')->get();
 
-        $workDay = new WorkDay($date, $holidays);
+        $workDay = new WorkDay($date);
 
         if ($workDay->isWorkday())
             return response()->json(true);
