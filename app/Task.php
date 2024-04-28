@@ -45,13 +45,22 @@ class Task
             $this->start = $this->startShift;   // So skip non-working hours
         else
             $offset = $this->start->getTimestamp() - $this->startShift->getTimestamp(); /* If start of the Task some time after the
-                   shift start, calculate the offset */
+        shift start, calculate the offset */
 
-        $result = clone $this->startShift;
+        $result = clone $this->start;
 
         $lengthOfTheShift = $this->endShift->getTimestamp() - $this->startShift->getTimestamp();
 
+        if($this->start >= $this->endShift){    //Task starts after the working hours
+            $firstDay = false;
+            $offset -= $lengthOfTheShift;
+            $result = clone $this->startShift;
+            $result->modify('+1day');
+        }
+
+
         while ($this->duration > 0) {
+
             if ($this->ignoreWorkDays) {
                 if (!$this->workDayFacade::isWorkDay($this->startShift)) {
                     $firstDay = false;

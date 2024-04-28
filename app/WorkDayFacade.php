@@ -4,6 +4,7 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+
 /**
  * Class WorkDayFacade
  *
@@ -20,7 +21,8 @@ class WorkDayFacade
     const SATURDAY = 6;
     private static Carbon $date;
     private static Collection $holidays;
-    public function __construct($holidays){
+    public function __construct($holidays)
+    {
         self::$holidays = $holidays;
     }
 
@@ -48,7 +50,7 @@ class WorkDayFacade
      *
      * @return bool
      */
-    private static function isWeekend() : bool
+    private static function isWeekend(): bool
     {
 
         if (self::$date->dayOfWeek() == self::SATURDAY || self::$date->dayOfWeek() == self::SUNDAY)
@@ -78,7 +80,7 @@ class WorkDayFacade
      *
      * @return bool
      */
-    private static function isEaster() : bool
+    private static function isEaster(): bool
     {
         //based on: https://cs.wikipedia.org/wiki/V%C3%BDpo%C4%8Det_data_Velikonoc
         $year = self::$date->format('Y');
