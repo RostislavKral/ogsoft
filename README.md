@@ -10,9 +10,9 @@
 ## Overview
 - MariaDB was used as a Database.
 - Currently only Czech holidays are considered and seeded, but it would be no problem to add more because of the `country` column in `Holidays` table. Thus we could use this column for different nations or even use all holidays. Weekend days are just class constants.
-- Eastern holidays for Czechia are calculted by equations provided by: https://cs.wikipedia.org/wiki/V%C3%BDpo%C4%8Det_data_Velikonoc (only for years 2000-2099)
+- Easter holidays for Czechia are calculted by equations provided by: https://cs.wikipedia.org/wiki/V%C3%BDpo%C4%8Det_data_Velikonoc (only for years 2000-2099)
 - PHPUnit tests were used to test functionality of Task class.
-- Postman collection is saved in root directory in: `OGSoft.postman_collection.json`
+- Postman collection is saved in root directory in: `OGSoft.postman_collection.json` file
 
 ## Setup
 - We need a MySQL database, create there a new database

@@ -5,6 +5,11 @@ namespace App;
 use Illuminate\Support\Collection;
 use App\WorkDayFacade;
 
+/**
+ * Class Task
+ *
+ * @method \DateTime approximate()
+ */
 class Task
 {
     private \DateTime $start, $startShift, $endShift;
@@ -25,7 +30,11 @@ class Task
         $this->workDayFacade = $workDayFacade;
     }
 
-
+    /**
+     * Method does calculate number of (work) days needed to accomplish the task and returns the date and time when task will be finished.
+     *
+     * @return \DateTime returns the approximate date and time of the task
+     */
     public function approximate(): \DateTime
     {
         //dd($this->holidays);
@@ -37,11 +46,10 @@ class Task
         else
             $offset = $this->start->getTimestamp() - $this->startShift->getTimestamp(); /* If start of the Task some time after the
                    shift start, calculate the offset */
+
         $result = clone $this->startShift;
 
         $lengthOfTheShift = $this->endShift->getTimestamp() - $this->startShift->getTimestamp();
-
-
 
         while ($this->duration > 0) {
             if ($this->ignoreWorkDays) {
@@ -71,6 +79,8 @@ class Task
 
             $firstDay = false;
         }
+
+
         return $result;
     }
 

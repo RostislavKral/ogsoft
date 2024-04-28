@@ -4,6 +4,16 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+/**
+ * Class WorkDayFacade
+ *
+ * Providing a facade for determining whether the day is work day or not
+ *
+ * @method bool isWorkDay()
+ * @method bool isHoliday()
+ * @method bool isEastern()
+ * @method bool isWeekend()
+ */
 class WorkDayFacade
 {
     const SUNDAY = 0;
@@ -13,6 +23,12 @@ class WorkDayFacade
     public function __construct($holidays){
         self::$holidays = $holidays;
     }
+
+    /**
+     * Wrapper method determining if the date is a workday or not using rules
+     *
+     * @return bool
+     */
     public static function isWorkDay($date): bool
     {
         self::$date = Carbon::create($date);
@@ -27,7 +43,12 @@ class WorkDayFacade
         return true;
     }
 
-    private static function isWeekend()
+    /**
+     * Rule method for weekend
+     *
+     * @return bool
+     */
+    private static function isWeekend() : bool
     {
 
         if (self::$date->dayOfWeek() == self::SATURDAY || self::$date->dayOfWeek() == self::SUNDAY)
@@ -36,6 +57,11 @@ class WorkDayFacade
         return false;
     }
 
+    /**
+     * Rule method for holidays passed in constructor
+     *
+     * @return bool
+     */
     private static function isHoliday(): bool
     {
         foreach (self::$holidays as $holiday) {
@@ -46,12 +72,18 @@ class WorkDayFacade
 
         return false;
     }
-    private static function isEaster()
+
+    /**
+     * Rule method for Easter
+     *
+     * @return bool
+     */
+    private static function isEaster() : bool
     {
         //based on: https://cs.wikipedia.org/wiki/V%C3%BDpo%C4%8Det_data_Velikonoc
         $year = self::$date->format('Y');
 
-        //for 2000-2099 years constants m = 24 and n = 5
+        //for 2000-2099 years constants are m = 24 and n = 5
         $m = 24;
         $n = 5;
 
